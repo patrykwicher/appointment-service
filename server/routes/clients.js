@@ -24,23 +24,42 @@ clientsRouter.post('/register', async (req, res) => {
     }
 });
 
-clientsRouter.post('/login', passport.authenticate('local', { 
-    successRedirect: '/clients/login', 
-    failureRedirect: '/clients', 
-    failureFlash: true 
-}));
+// clientsRouter.post('/login', passport.authenticate('local', { 
+//     successRedirect: '/clients/login', 
+//     failureRedirect: '/clients', 
+//     failureFlash: true 
+// }));
 
-clientsRouter.get('/login', async (req, res) => {
-    try {
-        const client = await Client.findOne(req.body.email);
-        res.send(client);
-    } catch (err) {
-        console.log(err);
+clientsRouter.post('/login', (req, res) => {
+    passport.authenticate('local', (error, user, info) => {
+        if(error) {
+            // return res.send({ message: error || "Server/Database Error", error: error.message });
+            return res.status(500).json({ message: 'Something wrong with server/db' })
+        }
+
+        if(!user) {
+            // return res.send({ message: 'Wrong email or password', error: error.message });
+            return res.status(400).json({ message: 'Wrong email or password' })
+        }
+
+        req.login(user, (error) => {
+            if(error) {
+                return res.status(400).json({ error: error });
+            }
+
+            // return res.send(user);
+            return res.json(user);
+        });
+    })(req, res);
+});
+
+clientsRouter.get('/logout', (req, res) => {
+    if(req.user) {
+        req.logout();
+        res.status(200).json('logged out');
+    } else {
+        console.log('XD');
     }
-});
-
-clientsRouter.get('/', async (req, res) => {
-    res.send({ message: 'xd'});
-});
+})
 
 module.exports = clientsRouter;

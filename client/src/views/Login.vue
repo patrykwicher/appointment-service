@@ -4,14 +4,15 @@
       <form @submit.prevent id="form">
         <div class="header">LOG IN TO YOUR ACCOUNT</div>
         <div class="email">
-          <input type="email" name="" id="" placeholder="E-mail address" v-model="userData.email" required/>
+          <input type="email" name="" id="" placeholder="E-mail address" v-model="userData.username" />
         </div>
         <div class="password">
-          <input type="password" name="" id="" placeholder="Password" v-model="userData.password" required/>
+          <input type="password" name="" id="" placeholder="Password" v-model="userData.password" />
         </div>
         <div class="login-button">
           <LoginButton text="LOGIN" @click="loginUser" />
         </div>
+        <button @click="logout">logout</button>
       </form>
     </div>
     <div class="second-column">
@@ -25,7 +26,6 @@
         </router-link>
       </div>
     </div>
-    {{ userData }}
   </div>
 </template>
 
@@ -36,7 +36,7 @@ import LoginButton from "../components/LoginButton.vue";
 export default defineComponent({
   setup() {
     const userData = ref({
-      email: '',
+      username: '',
       password: ''
     })
 
@@ -47,7 +47,7 @@ export default defineComponent({
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(userData)
+          body: JSON.stringify({ username: 'patryk@op.pl', password: '12345' })
         });
 
         const user = await userInfos.json();
@@ -56,10 +56,21 @@ export default defineComponent({
         console.log(err.message);
       }
     }
+
+    const logout = async () => {
+      try {
+        const logout = await fetch('http://localhost:3000/clients/logout');
+        const log = await logout.json();
+        console.log(logout, log);
+      } catch(e) {
+        console.log(e);
+      }
+    }
   
     return {
       userData,
-      loginUser
+      loginUser,
+      logout,
     }
   },
   components: {

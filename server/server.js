@@ -28,7 +28,7 @@ server.use(cookieParser('cats'));
 server.use(session({ 
   secret: 'cats',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: true,
 }));
 server.use(flash());
 server.use(passport.initialize());
@@ -38,7 +38,7 @@ server.use('/clients', clientsRouter);
 server.use('/employees', employeesRouter);
 
 server.get('/', (req, res) => {
-  res.send('hola amigo');
+  res.send(passport);
 })
 
 server.listen(3000, () => console.log('Server started!'));
