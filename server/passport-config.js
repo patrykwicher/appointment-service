@@ -24,14 +24,6 @@ passport.use(new LocalStrategy((username, password, done) => {
         } catch(e) {
             return done(e);
         }
-
-    
-        // if(await bcrypt.compare(user.password, password)) {
-        //    return done(null, false, { message: '' });
-        // }
-
-        // console.log(user);
-        // return done(null, user);
     });
 })); 
 

@@ -64,8 +64,8 @@
           </div>
         </div>
       </div>
-      <div class="button" v-if="checkedServices.length">
-        <router-link to="/employee" class="route-button">
+      <div class="button" v-if="checkedServices.length && checkIfCurrentUserObjectExists">
+        <router-link to="/chosen-services" class="route-button">
           <LoginButton text="NEXT" @click="declareChosenServices" />
         </router-link>
       </div>
@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import Service from "../types/Service";
 import LoginButton from "../components/LoginButton.vue";
 import createStore from "../store/index";
@@ -144,6 +144,10 @@ export default defineComponent({
       createStore.commit("declareChosenServices", checkedServices);
     };
 
+    const checkIfCurrentUserObjectExists = computed(() => {
+      return createStore.state.checkIfCurrentUserObjectExists;
+    })
+
     return {
       arrayOfServices,
       selectedServices,
@@ -151,6 +155,7 @@ export default defineComponent({
       getCategory,
       checkedServices,
       declareChosenServices,
+      checkIfCurrentUserObjectExists
     };
   },
   components: {

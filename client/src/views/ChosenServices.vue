@@ -18,8 +18,12 @@
                     </select>
                 </div>
                 <div class="date-container">
-                    <div class="days" v-for="(day, index) in arrayOfDays" :key="index">
-                        {{ day }}
+                    <div class="days" v-for="(day, propName) in arrayOfDays" :key="propName">
+                        <div v-for="(date, datesIndex) in arrayOfDates" :key="datesIndex">
+                            <div v-if="date.getDay() == propName">
+                                {{ day }}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="date-container">
@@ -35,27 +39,51 @@
                 </div>
             </div>
         </div>
+        <div class="button">
+            <router-link to="chosen-services">
+                <LoginButton text="SAVE" @click="send" />
+            </router-link>
+        </div>
         {{ getDeclaredServiceFromStore }}
+        {{ currentUser }}
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, ref, onMounted } from 'vue'
 import createStore from '../store/index';
+import LoginButton from '../components/LoginButton.vue';
 
 export default defineComponent({
     setup() {
         let arrayOfDates = ref<Date[]>([]);
-        const arrayOfDays = ref<string[]>(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
+        // const arrayOfDays = ref<string[]>(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+        const arrayOfDays = ref({
+            0: 'Sun',
+            1: 'Mon',
+            2: 'Tue',
+            3: 'Wed',
+            4: 'Thu',
+            5: 'Fri',
+            6: 'Sat',
+        })
         const arrayOfHours = ref<string[]>(['09:00 - 10:00', '10:00 - 11:00', '11:00 - 12:00', '12:00 - 13:00', '13:00 - 14:00', 
         '14:00 - 15:00', '15:00 - 16:00', '16:00 - 17:00', ]);
 
         const getDeclaredServiceFromStore = computed(() => {
             return createStore.state.chosenServices;
         })
-        
+
+        const currentUser = computed(() => {
+            return createStore.state.currentUser;
+        })
+
+        const send = () => {
+            createStore.dispatch('saveChosenServicesToDatabase')
+        }
+
         onMounted(() => {
-            let todaysDate = new Date();
+            const todaysDate = new Date();
 
             for(let i = 0; i < 7; i++) {
                 if(arrayOfDates.value.length === 0) {
@@ -64,15 +92,20 @@ export default defineComponent({
                     arrayOfDates.value.push(new Date(todaysDate.setDate(todaysDate.getDate() + 1)));
                 }
             }
-        })
+        });
 
         return {
             getDeclaredServiceFromStore,
             arrayOfDates,
             arrayOfDays,
-            arrayOfHours
+            arrayOfHours,
+            currentUser,
+            send
         }
     },
+    components: {
+        LoginButton
+    }
 })
 </script>
 
@@ -143,7 +176,7 @@ $blue-border-color: #5aabe4;
                         color: $blue-border-color;
                         cursor: pointer;
 
-                        &:hover {
+                        &:hover, &:active, &:focus {
                             background-color: $blue-border-color;
                             color: white;
                         }
@@ -155,6 +188,14 @@ $blue-border-color: #5aabe4;
                         margin: 0.5rem 0 1rem 0;
                     }
                 }
+            }
+        }
+
+        .button {
+            margin: 0 9%;
+
+            .login-button {
+                width: 100%;
             }
         }
     }

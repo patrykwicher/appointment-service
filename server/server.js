@@ -9,6 +9,7 @@ const flash = require('connect-flash');
 
 const clientsRouter = require('./routes/clients.js');
 const employeesRouter = require('./routes/employees.js');
+const servicesRouter = require('./routes/services.js');
 
 dotenv.config();
 
@@ -36,9 +37,10 @@ server.use(passport.session());
 
 server.use('/clients', clientsRouter);
 server.use('/employees', employeesRouter);
+server.use('/services', servicesRouter);
 
 server.get('/', (req, res) => {
-  res.send(passport);
+  res.send('Hello');
 })
 
 server.listen(3000, () => console.log('Server started!'));

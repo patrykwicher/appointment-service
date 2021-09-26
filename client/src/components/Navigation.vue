@@ -21,12 +21,20 @@
                 <div class="icon-container">
                     <img src="../assets/images/close-icon.png" alt="close" id="close" @click="closeIcon">
                 </div>
-                <!-- <router-link to="/login" @click="openCloseBurgerMenu" class='router-class'>
-                    <div class="login">LOG IN</div>
-                </router-link> -->
-                <div @click="getCurrentLink">
+                <div @click="getCurrentLink" v-if="!checkIfCurrentUserObjectExists">
                     <router-link to="/login" class="login-button">
                         <LoginButton text="LOG IN" @click="openCloseBurgerMenu"/>
+                    </router-link>
+                </div>
+                <div class="current-user" v-else>
+                    <router-link to="/" class="options">
+                        <div class="option first-option">MY VISITS<img src="../assets/images/arrow-right.png" alt="right arrow"></div>
+                    </router-link>
+                    <router-link to="/" class="options">
+                        <div class="option">MY ACCOUNT <img src="../assets/images/arrow-right.png" alt="right arrow"></div>
+                    </router-link>
+                    <router-link to='/login' class="options">
+                        <div class="option" @click="logout">LOGOUT <img src="../assets/images/arrow-right.png" alt="right arrow"></div>
                     </router-link>
                 </div>
             </div>
@@ -41,8 +49,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed, onMounted } from 'vue';
 import LoginButton from './LoginButton.vue';
+import createStore from '../store/index';
 
 export default defineComponent ({
     components: {
@@ -83,6 +92,27 @@ export default defineComponent ({
                 getCurrentURL.value = window.location.href;
             }, 50);
         }
+
+        const logout = async () => {
+            createStore.commit('setCheckIfCurrentUserObjectExists', false);
+            createStore.commit('setCurrentUser', {});
+
+            try {
+                const logout = await fetch('http://localhost:3000/clients/logout');
+                const log = await logout.json();
+                console.log(logout, log);
+            } catch(e) {
+                console.log(e);
+            }
+        }
+
+        const getCurrentUserFromStore = computed(() => {
+            return createStore.state.currentUser;
+        })
+
+        const checkIfCurrentUserObjectExists = computed(() => {
+            return createStore.state.checkIfCurrentUserObjectExists;
+        })
     
         return {
             windowWidth,
@@ -90,7 +120,10 @@ export default defineComponent ({
             closeIcon,
             getCurrentURL,
             loginURL,
-            getCurrentLink
+            getCurrentLink,
+            getCurrentUserFromStore,
+            checkIfCurrentUserObjectExists,
+            logout
         }
     }
 })
@@ -100,7 +133,7 @@ export default defineComponent ({
 $login-color: #5aabe4;
 $navbar-background: #F6F6F6;
 $hover-option: #FBFBFB;
-$shadow-color: #858585;
+$shadow-color: #acacac;
 
 @media (max-width: 320px) {
     .main-container {
@@ -166,6 +199,38 @@ $shadow-color: #858585;
                     width: 90%;
                     text-align: center;
                     margin: 0.6rem auto;
+                }
+
+                .current-user {
+                    margin-top: 1rem;
+
+                    .first-option { 
+                        border-top: 1px solid $shadow-color;
+                    }
+
+                    .options {
+                        text-decoration: none;
+                        cursor: pointer;
+                        text-align: left;
+
+                        .option {
+                            display: flex;
+                            justify-content: space-between;
+                            padding: 5% 10%;
+                            font-size: 0.9rem;
+                            color: black;
+                            align-items: center;
+                            border-bottom: 1px solid $shadow-color;
+
+                            &:hover {
+                                background-color: $shadow-color;
+                            }
+
+                            img {
+                                width: 0.9rem;
+                            }
+                        }
+                    }
                 }
             }
         }

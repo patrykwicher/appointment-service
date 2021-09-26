@@ -33,12 +33,10 @@ clientsRouter.post('/register', async (req, res) => {
 clientsRouter.post('/login', (req, res) => {
     passport.authenticate('local', (error, user, info) => {
         if(error) {
-            // return res.send({ message: error || "Server/Database Error", error: error.message });
             return res.status(500).json({ message: 'Something wrong with server/db' })
         }
 
         if(!user) {
-            // return res.send({ message: 'Wrong email or password', error: error.message });
             return res.status(400).json({ message: 'Wrong email or password' })
         }
 
@@ -47,8 +45,7 @@ clientsRouter.post('/login', (req, res) => {
                 return res.status(400).json({ error: error });
             }
 
-            // return res.send(user);
-            return res.json(user);
+            return res.status(200).json(user);
         });
     })(req, res);
 });

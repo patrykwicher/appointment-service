@@ -4,7 +4,7 @@
       <form @submit.prevent id="form">
         <div class="header">LOG IN TO YOUR ACCOUNT</div>
         <div class="email">
-          <input type="email" name="" id="" placeholder="E-mail address" v-model="userData.username" />
+          <input type="email" name="" id="" placeholder="E-mail address" v-model="userData.email" />
         </div>
         <div class="password">
           <input type="password" name="" id="" placeholder="Password" v-model="userData.password" />
@@ -12,7 +12,6 @@
         <div class="login-button">
           <LoginButton text="LOGIN" @click="loginUser" />
         </div>
-        <button @click="logout">logout</button>
       </form>
     </div>
     <div class="second-column">
@@ -30,15 +29,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/runtime-core";
+import { defineComponent, ref, toRefs, reactive } from "@vue/runtime-core";
 import LoginButton from "../components/LoginButton.vue";
+import createStore from "../store/index"; 
 
 export default defineComponent({
   setup() {
-    const userData = ref({
-      username: '',
+    const userData = reactive({
+      email: '',
       password: ''
     })
+    const errorMessage = ref({});
 
     const loginUser = async () => {
       try {
@@ -47,30 +48,27 @@ export default defineComponent({
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ username: 'patryk@op.pl', password: '12345' })
+          body: JSON.stringify({ username: userData.email, password: userData.password })
         });
 
         const user = await userInfos.json();
-        console.log(user);
+
+        if(user.message) {
+          errorMessage.value = user.message;
+          createStore.commit('setCheckIfCurrentUserObjectExists', false);
+        } else {
+          createStore.commit('setCurrentUser', user);
+          createStore.commit('setCheckIfCurrentUserObjectExists', true);
+        }
+        
       } catch(err) {
         console.log(err.message);
-      }
-    }
-
-    const logout = async () => {
-      try {
-        const logout = await fetch('http://localhost:3000/clients/logout');
-        const log = await logout.json();
-        console.log(logout, log);
-      } catch(e) {
-        console.log(e);
       }
     }
   
     return {
       userData,
       loginUser,
-      logout,
     }
   },
   components: {
