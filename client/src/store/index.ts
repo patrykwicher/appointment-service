@@ -5,7 +5,9 @@ export default createStore({
     chosenServices: [],
     currentUser: {},
     checkIfCurrentUserObjectExists: false,
+    fetchedUserVisits: null
   },
+
   mutations: {
     declareChosenServices(state, chosenServices) {
       state.chosenServices = chosenServices;
@@ -15,8 +17,12 @@ export default createStore({
     },
     setCheckIfCurrentUserObjectExists(state, bool) {
       state.checkIfCurrentUserObjectExists = bool;
+    },
+    fetchedUserVisits(state, visits) {
+      state.fetchedUserVisits = visits;
     }
   },
+
   actions: {
     saveChosenServicesToDatabase(context) {
       try {
@@ -38,11 +44,9 @@ export default createStore({
 
           arrayOfServices.push(objectWithInformationsAboutService);
         });
-      
-        // console.log(arrayOfServices);
 
         arrayOfServices.forEach(async service => {
-          const xd = await fetch('http://localhost:3000/services/save-service', {
+          const userService = await fetch('http://localhost:3000/services/save-service', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -50,13 +54,34 @@ export default createStore({
             body: JSON.stringify(service)
           });
 
-          console.log(xd.json());
+          console.log(userService.json());
         })
+      } catch(err) {
+        console.log(err);
+      }
+    },
+    
+    async fetchSavedUserServices(context) {
+      try {
+        const currentUser = await JSON.parse(JSON.stringify(context.state.currentUser));
+
+        const userVisits = await fetch('http://localhost:3000/services/fetch-user-visits', {
+          method: 'POST',
+          headers: {
+            'COntent-Type': 'application/json'
+          },
+          body: JSON.stringify(currentUser)
+        });
+
+        const visits = await userVisits.json()
+        
+        context.commit('fetchedUserVisits', visits);
       } catch(err) {
         console.log(err);
       }
     }
   },
+
   modules: {
   }
 })

@@ -31,8 +31,8 @@
                         {{ date.getDate() }}
                     </div>
                 </div>
-                <div class="hours-container employee-choice" >
-                    <select name="" id="" required v-model="service.hourOfAppointment">
+                <div class="hours-container employee-choice">
+                    <select name="" id="" required v-model="service.hourOfAppointment" v-if="service.date">
                         <option value="" disabled selected >Choose an hour</option>
                         <option :value="hour" v-for="(hour, index) in arrayOfHours" :key="index">{{ hour }}</option>
                     </select>
@@ -41,7 +41,7 @@
         </div>
         <div class="button">
             <router-link to="chosen-services">
-                <LoginButton text="SAVE" @click="send" />
+                    <LoginButton text="SAVE" @click="saveChosenServicesToDatabase" />
             </router-link>
         </div>
         {{ getDeclaredServiceFromStore }}
@@ -78,12 +78,12 @@ export default defineComponent({
             return createStore.state.currentUser;
         })
 
-        const send = () => {
+        const saveChosenServicesToDatabase = () => {
             createStore.dispatch('saveChosenServicesToDatabase')
         }
 
         onMounted(() => {
-            const todaysDate = new Date();
+            let todaysDate = new Date();
 
             for(let i = 0; i < 7; i++) {
                 if(arrayOfDates.value.length === 0) {
@@ -100,7 +100,7 @@ export default defineComponent({
             arrayOfDays,
             arrayOfHours,
             currentUser,
-            send
+            saveChosenServicesToDatabase
         }
     },
     components: {

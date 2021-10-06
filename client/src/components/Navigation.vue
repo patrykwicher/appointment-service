@@ -27,13 +27,13 @@
                     </router-link>
                 </div>
                 <div class="current-user" v-else>
-                    <router-link to="/" class="options">
+                    <router-link to="/user-visits" class="options" @click="closeIcon" >
                         <div class="option first-option">MY VISITS<img src="../assets/images/arrow-right.png" alt="right arrow"></div>
                     </router-link>
-                    <router-link to="/" class="options">
+                    <router-link to="/" class="options" @click="closeIcon">
                         <div class="option">MY ACCOUNT <img src="../assets/images/arrow-right.png" alt="right arrow"></div>
                     </router-link>
-                    <router-link to='/login' class="options">
+                    <router-link to='/login' class="options" @click="closeIcon">
                         <div class="option" @click="logout">LOGOUT <img src="../assets/images/arrow-right.png" alt="right arrow"></div>
                     </router-link>
                 </div>
