@@ -26,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
     component: ChosenServices
   },
   {
-    path: '/user-visits',
+    path: '/user-visits/:id',
     name: 'UserVisits',
     component: UserVisits
   }

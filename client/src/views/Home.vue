@@ -26,45 +26,47 @@
           name=""
           class="search"
           placeholder="Find a service"
+          v-model="searchInput"
         />
       </div>
-      <div
-        class="services-container"
-        v-for="service in arrayOfServices"
-        :key="service.name"
-      >
-        <div class="service" v-if="selectedServices === 'All'">
-          <div class="service-name">
-            {{ service.name }}
+      <div>
+        <div class="services-container" v-for="(service, index) in searchedNameOfService" :key="index">
+          <div class="service" v-if="selectedServices === 'All'">
+            <div class="service-name">
+              {{ searchedNameOfService[index].name }}
+            </div>
+            <div class="service-price">{{ searchedNameOfService[index].price }} zł</div>
+            <div class="checkbox">
+              <input
+                type="checkbox"
+                name=""
+                id=""
+                v-model="checkedServices"
+                :value="service"
+              />
+            </div>
           </div>
-          <div class="service-price">{{ service.price }} zł</div>
-          <div class="checkbox">
-            <input
-              type="checkbox"
-              name=""
-              id=""
-              v-model="checkedServices"
-              :value="service"
-            />
+          <div class="service" v-if="selectedServices === searchedNameOfService[index].type">
+            <div class="service-name">
+              {{ searchedNameOfService[index].name }}
+            </div>
+            <div class="service-price">{{ searchedNameOfService[index].price }} zł</div>
+            <div class="checkbox">
+              <input
+                type="checkbox"
+                name=""
+                id=""
+                v-model="checkedServices"
+                :value="service"
+              />
+            </div>
           </div>
-        </div>
-        <div class="service" v-if="service.type === selectedServices">
-          <div class="service-name">
-            {{ service.name }}
-          </div>
-          <div class="service-price">{{ service.price }} zł</div>
-          <div class="checkbox">
-            <input
-              type="checkbox"
-              name=""
-              id=""
-              v-model="checkedServices"
-              :value="service"
-            />
-          </div>
-        </div>
+        </div>  
       </div>
-      <div class="button" v-if="checkedServices.length && checkIfCurrentUserObjectExists">
+      <div
+        class="button"
+        v-if="checkedServices.length && checkIfCurrentUserObjectExists"
+      >
         <router-link to="/chosen-services" class="route-button">
           <LoginButton text="NEXT" @click="declareChosenServices" />
         </router-link>
@@ -89,7 +91,7 @@ export default defineComponent({
         price: 150,
         employee: "",
         date: new Date(),
-        hourOfAppointment: ''
+        hourOfAppointment: "",
       },
       {
         name: "Permanent Makeup",
@@ -97,7 +99,7 @@ export default defineComponent({
         price: 300,
         employee: "",
         date: new Date(),
-        hourOfAppointment: ''
+        hourOfAppointment: "",
       },
       {
         name: "Baleyage",
@@ -105,7 +107,7 @@ export default defineComponent({
         price: 420,
         employee: "",
         date: new Date(),
-        hourOfAppointment: ''
+        hourOfAppointment: "",
       },
       {
         name: "Waxing",
@@ -113,12 +115,19 @@ export default defineComponent({
         price: 69,
         employee: "",
         date: new Date(),
-        hourOfAppointment: ''
+        hourOfAppointment: "",
       },
     ]);
 
     const selectedServices = ref<string>("All");
     const checkedServices = ref<Service[]>([]);
+    const searchInput = ref<string>("");
+
+    const searchedNameOfService = computed(() => {
+      return arrayOfServices.value.filter((service) => {
+        return service.name.toLowerCase().includes(searchInput.value.toLowerCase());
+      });
+    });
 
     const openCategoryBar = () => {
       const arrowIcon = document.getElementById("arrow-img")!;
@@ -146,7 +155,7 @@ export default defineComponent({
 
     const checkIfCurrentUserObjectExists = computed(() => {
       return createStore.state.checkIfCurrentUserObjectExists;
-    })
+    });
 
     return {
       arrayOfServices,
@@ -155,7 +164,9 @@ export default defineComponent({
       getCategory,
       checkedServices,
       declareChosenServices,
-      checkIfCurrentUserObjectExists
+      checkIfCurrentUserObjectExists,
+      searchInput,
+      searchedNameOfService,
     };
   },
   components: {
@@ -321,12 +332,7 @@ $select-bg-color: #e6e6e6;
 
           .category {
             padding: 0.5rem 0;
-            transition: ease-in 0.5s;
             cursor: pointer;
-
-            &:hover {
-              background-color: $select-bg-color;
-            }
           }
         }
       }
@@ -379,6 +385,13 @@ $select-bg-color: #e6e6e6;
           }
         }
       }
+
+      .button {
+        .login-button {
+          width: 100%;
+          margin-top: 1.5rem;
+        }
+      }
     }
   }
 }
@@ -386,11 +399,34 @@ $select-bg-color: #e6e6e6;
 @media (min-width: 600px) {
   .container {
     margin: 0 3rem;
+
+    .second-column {
+      .button {
+        text-align: center;
+
+        .login-button {
+          width: 30%;
+          font-size: 1rem;
+        }
+      }
+    }
   }
 }
 
 @media (min-width: 768px) {
   .container {
+    min-height: 60vh;
+
+    .first-column {
+      .service-select-container {
+        font-size: 1.1rem;
+        
+        .categories {
+          font-size: 1.1rem;
+        }
+      }
+    }
+
     .second-column {
       .search-bar {
         text-align: right;
@@ -404,6 +440,12 @@ $select-bg-color: #e6e6e6;
         .service {
           .service-name {
             width: 85%;
+            font-size: 1rem;
+            padding: 0.5rem 0;
+          }
+
+          .service-price {
+            font-size: 1.1rem;
           }
         }
       }
@@ -413,6 +455,7 @@ $select-bg-color: #e6e6e6;
 
 @media (min-width: 992px) {
   .container {
+    min-height: 70vh;
     display: flex;
 
     .first-column {
@@ -446,6 +489,74 @@ $select-bg-color: #e6e6e6;
       .search-bar {
         input {
           width: 23%;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1920px) {
+  .container {
+    .first-column {
+      .header {
+        h3 {
+          font-size: 2.5rem;
+        }
+      }
+
+      .service-select-container {
+        .categories {
+          font-size: 1.6rem;
+        }
+
+        #categories-list {
+          font-size: 1.4rem;
+        }
+      }
+    }
+
+    .second-column {
+      .selected-category {
+        h4 {
+          font-size: 2.1rem;
+        }
+      }
+
+      .search-bar {
+        input {
+          width: 30%;
+          font-size: 1.5rem;
+        }
+      }
+
+      .services-container {
+        .service {
+          .service-name {
+            font-size: 1.4rem;
+          }
+
+          .service-price {
+            font-size: 1.4rem;
+          }
+
+          .checkbox {
+            input {
+              width: 20px;
+              height: 20px;
+            }
+          }
+        }
+      }
+    }
+
+    .button {
+          font-size: 1.7rem;
+      text-align: center;
+
+      .route-button {
+        .login-button {
+          width: 30%;
+          font-size: 1.5rem;
         }
       }
     }

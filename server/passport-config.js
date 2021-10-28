@@ -28,11 +28,12 @@ passport.use(new LocalStrategy((username, password, done) => {
 })); 
 
 passport.serializeUser((user, done) => {
-    // const userId = user._id.toString();
     done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
+    console.log('deserial')
+
     Client.findById(id, (err, user) => {
         done(err, user);
     });

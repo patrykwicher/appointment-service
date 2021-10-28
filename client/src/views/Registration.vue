@@ -88,10 +88,9 @@ $container-background: #f6f6f6;
 
 @media (max-width: 320px) {
   .container {
-    height: 90vh;
     background-color: $container-background;
     text-align: center;
-    padding-top: 4rem;
+    padding: 4rem 0;
 
     .header {
       font-weight: 700;
@@ -122,10 +121,9 @@ $container-background: #f6f6f6;
 
 @media (min-width: 321px) {
   .container {
-    height: 90vh;
     background-color: $container-background;
     text-align: center;
-    padding-top: 4rem;
+    padding: 4rem 0;
 
     .header {
       font-weight: 700;
@@ -176,6 +174,8 @@ $container-background: #f6f6f6;
 
 @media (min-width: 768px) {
   .container {
+    min-height: 50vh;
+
     .full-name,
     .email,
     .password,
@@ -218,6 +218,8 @@ $container-background: #f6f6f6;
 
 @media (min-width: 1024px) {
   .container {
+    min-height: 61vh;
+
     .full-name,
     .email,
     .password,
@@ -252,6 +254,31 @@ $container-background: #f6f6f6;
     .button-container {
       .register-button {
         width: 15%;
+      }
+    }
+  }
+}
+
+@media (min-width: 1920px) {
+  .container {
+    .header {
+      font-size: 1.7rem;
+    }
+
+    .full-name,
+    .email,
+    .password,
+    .phone-number {
+      width: 85%;
+      
+      input {
+        font-size: 1.5rem;
+      }
+    }
+
+    .button-container {
+      .register-button {
+        font-size: 1.5rem;
       }
     }
   }

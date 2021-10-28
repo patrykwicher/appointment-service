@@ -24,12 +24,6 @@ clientsRouter.post('/register', async (req, res) => {
     }
 });
 
-// clientsRouter.post('/login', passport.authenticate('local', { 
-//     successRedirect: '/clients/login', 
-//     failureRedirect: '/clients', 
-//     failureFlash: true 
-// }));
-
 clientsRouter.post('/login', (req, res) => {
     passport.authenticate('local', (error, user, info) => {
         if(error) {
@@ -51,12 +45,8 @@ clientsRouter.post('/login', (req, res) => {
 });
 
 clientsRouter.get('/logout', (req, res) => {
-    if(req.user) {
-        req.logout();
-        res.status(200).json('logged out');
-    } else {
-        console.log('XD');
-    }
+    req.logout();
+    res.status(200).json('logged out');
 })
 
 module.exports = clientsRouter;

@@ -10,10 +10,16 @@
                 </router-link>
             </div>
             <div class="login-container" v-if="windowWidth >= 1024">
-                <div class="login">
+                <div class="login" v-if="!getCurrentUserFromStore.fullName">
                     <router-link to="/login">
                         <LoginButton text="LOG IN" />
                     </router-link>
+                </div>
+                <div class='user' v-else>
+                    <router-link class="user-router" :to="{ name:'UserVisits', params: { id: getCurrentUserFromStore._id }}">
+                        {{ userFirstName }}
+                    </router-link>
+                    <div class="logout-container" @click="logout">Logout</div>
                 </div>
             </div>
             <div id="shadow"></div>
@@ -21,13 +27,13 @@
                 <div class="icon-container">
                     <img src="../assets/images/close-icon.png" alt="close" id="close" @click="closeIcon">
                 </div>
-                <div @click="getCurrentLink" v-if="!checkIfCurrentUserObjectExists">
+                <div v-if="!checkIfCurrentUserObjectExists">
                     <router-link to="/login" class="login-button">
                         <LoginButton text="LOG IN" @click="openCloseBurgerMenu"/>
                     </router-link>
                 </div>
                 <div class="current-user" v-else>
-                    <router-link to="/user-visits" class="options" @click="closeIcon" >
+                    <router-link :to="{ name: 'UserVisits', params: { id: getCurrentUserFromStore._id }}" class="options" @click="closeIcon" >
                         <div class="option first-option">MY VISITS<img src="../assets/images/arrow-right.png" alt="right arrow"></div>
                     </router-link>
                     <router-link to="/" class="options" @click="closeIcon">
@@ -39,19 +45,28 @@
                 </div>
             </div>
         </div>
-        <div class="navbar" id="navbar" v-if="getCurrentURL !== loginURL">
-            <div class="navbar-options first-option">SERVICES</div>
-            <div class="navbar-options">ABOUT</div>
-            <div class="navbar-options">OPINIONS</div>
-            <div class="navbar-options">TEAM</div>
-        </div>        
+        <div class="navbar" id="navbar">
+            <router-link to="/" class='options-router'>
+                <div class="navbar-options first-option">SERVICES</div>
+            </router-link>
+            <router-link to="/" class='options-router'>
+                <div class="navbar-options">ABOUT</div>
+                </router-link>
+            <router-link to="/" class='options-router'>
+                <div class="navbar-options">OPINIONS</div>
+            </router-link>
+            <router-link to="/" class='options-router'>
+                <div class="navbar-options">TEAM</div>
+            </router-link>
+        </div>       
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import LoginButton from './LoginButton.vue';
 import createStore from '../store/index';
+import User from '../types/User';
 
 export default defineComponent ({
     components: {
@@ -59,8 +74,6 @@ export default defineComponent ({
     },
     setup() {
         const windowWidth = window.innerWidth;
-        let getCurrentURL = ref(window.location.href);
-        const loginURL = 'http://localhost:8080/login';
 
         const openCloseBurgerMenu = () => {
             const burgerMenu = document.getElementById('opened-burger-menu')!;
@@ -69,13 +82,17 @@ export default defineComponent ({
             if(burgerMenu.style.display === 'none') {
                 burgerMenu.style.display = 'block';
                 shadow.style.display = 'block';
+                hideShowFooter(false);
             }
             else {
                 burgerMenu.style.display = 'none';
                 shadow.style.display = 'none';
+                hideShowFooter(true);
             }
+        }
 
-            getCurrentLink();
+        const hideShowFooter = (bool: boolean) => {
+            createStore.commit('hideShowFooterIfNavBurgerIsOpened', bool);
         }
 
         const closeIcon = () => {
@@ -85,12 +102,7 @@ export default defineComponent ({
 
             burgerMenu.style.display = 'none';
             shadow.style.display = 'none';
-        }
-
-        const getCurrentLink = () => {
-            setTimeout(() => {
-                getCurrentURL.value = window.location.href;
-            }, 50);
+            hideShowFooter(true);
         }
 
         const logout = async () => {
@@ -113,17 +125,21 @@ export default defineComponent ({
         const checkIfCurrentUserObjectExists = computed(() => {
             return createStore.state.checkIfCurrentUserObjectExists;
         })
+
+        const userFirstName = computed(() => {
+            const user: User = createStore.state.currentUser;
+            const fullName = user.fullName.split(' ');
+            return fullName[0];
+        })
     
         return {
             windowWidth,
             openCloseBurgerMenu,
             closeIcon,
-            getCurrentURL,
-            loginURL,
-            getCurrentLink,
             getCurrentUserFromStore,
             checkIfCurrentUserObjectExists,
-            logout
+            logout,
+            userFirstName
         }
     }
 })
@@ -167,7 +183,7 @@ $shadow-color: #acacac;
                 z-index: 2;
                 position: absolute;
                 width: 100%;
-                height: 85vh;
+                height: 95vh;
                 top: 100%;
                 left: 0;
                 background-color: black;
@@ -179,7 +195,7 @@ $shadow-color: #acacac;
                 z-index: 3;
                 position: absolute;
                 width: 90%;
-                height: 85vh;
+                height: 95vh;
                 top: 100%;
                 left: 0;
                 background-color: $navbar-background;
@@ -241,13 +257,20 @@ $shadow-color: #acacac;
             font-size: 0.8rem;
             justify-content: space-around;
 
-            .navbar-options {
-                cursor: pointer;
-                padding: 1rem 1rem;
-                transition: ease-in .15s;
+            .options-router {
+                text-decoration: none;
+                color: black;
+                width: 100%;
+                text-align: center;
+                
+                .navbar-options {
+                    cursor: pointer;
+                    padding: 1rem 0;
+                    transition: ease-in .15s;
 
-                &:hover, &:focus {
-                    background-color: $hover-option;
+                    &:hover, &:focus {
+                        background-color: $hover-option;
+                    }
                 }
             }
         }
@@ -286,10 +309,10 @@ $shadow-color: #acacac;
                 z-index: 2;
                 position: absolute;
                 width: 100%;
-                height: 83vh;
+                height: 88vh;
                 top: 100%;
                 left: 0;
-                background-color: $shadow-color;
+                background-color: black;
                 opacity: 0.7;
             }
 
@@ -298,7 +321,7 @@ $shadow-color: #acacac;
                 z-index: 3;
                 position: absolute;
                 width: 85%;
-                height: 83vh;
+                height: 88vh;
                 top: 100%;
                 left: 0;
                 background-color: $navbar-background;
@@ -335,6 +358,39 @@ $shadow-color: #acacac;
                 .login-button {
                     width: 90%;
                     text-align: center;
+                    margin: 0.8rem 0;
+                }
+
+                .current-user {
+                    margin-top: 1rem;
+
+                    .first-option { 
+                        border-top: 1px solid $shadow-color;
+                    }
+
+                    .options {
+                        text-decoration: none;
+                        cursor: pointer;
+                        text-align: left;
+
+                        .option {
+                            display: flex;
+                            justify-content: space-between;
+                            padding: 5% 10%;
+                            font-size: 0.9rem;
+                            color: black;
+                            align-items: center;
+                            border-bottom: 1px solid $shadow-color;
+
+                            &:hover {
+                                background-color: $shadow-color;
+                            }
+
+                            img {
+                                width: 0.9rem;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -345,13 +401,21 @@ $shadow-color: #acacac;
             font-size: 0.8rem;
             justify-content: space-evenly;
 
-            .navbar-options {
-                cursor: pointer;
-                padding: 1rem 1rem;
-                transition: ease-in .15s;
+            .options-router {
+                text-decoration: none;
+                color: black;
+                width: 100%;
+                text-align: center;
+                
+                .navbar-options {
+                    cursor: pointer;
+                    padding: 1rem 0;
+                    transition: ease-in .15s;
+                    width: 100%;
 
-                &:hover, &:focus {
-                    background-color: $hover-option;
+                    &:hover, &:focus {
+                        background-color: $hover-option;
+                    }
                 }
             }
         }
@@ -400,7 +464,7 @@ $shadow-color: #acacac;
         }
 
         .navbar {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
     }
 }
@@ -421,12 +485,12 @@ $shadow-color: #acacac;
             }
 
             #shadow {
-                height: 90vh;
+                height: 91vh;
             }
 
             #opened-burger-menu {
                 width: 40%;
-                height: 90vh;
+                height: 91vh;
                 text-align: center;
 
                 .login-button {
@@ -436,12 +500,8 @@ $shadow-color: #acacac;
         }
 
         .navbar {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             justify-content: left;
-
-            :first-child {
-                margin-left: 6%;
-            }
 
             .navbar-options {
                 margin-right: 2%;
@@ -459,14 +519,16 @@ $shadow-color: #acacac;
         }
 
         .navbar {
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
     }
 }
 
 @media (min-width: 1024px) {
     .main-container {
-        .container { 
+        .container {
+            width: 100%;
+
             .logo {
                 text-align: left;
                 margin: 0.2rem 0; 
@@ -478,18 +540,37 @@ $shadow-color: #acacac;
 
             .login-container {
                 width: 15%;
+
                 .login {
                     width: 100%;
+                }
+
+                .user {
+                    text-align: center;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    display: flex;
+                    justify-content: space-evenly;
+
+                    .user-router {
+                        color: black;
+                        text-decoration: none;
+                        transition: ease-in 0.15s;
+
+                        &:hover {
+                            color: $login-color;
+                        }
+                    }
+
+                    .logout-container {
+                        cursor: pointer;
+                    }
                 }
             }
         }
 
         .navbar {
-            font-size: 0.9rem;
-
-            :first-child {
-                margin-left: 5%;
-            }
+            font-size: 0.95rem;
         }
     }
 }
@@ -497,23 +578,16 @@ $shadow-color: #acacac;
 @media (min-width: 1280px) {
     .main-container {
         .container {
-            margin: 0 3rem;       
+            width: 92%;
+            margin: 0 auto;
+            justify-content: space-around;      
 
             .logo {
                 margin: 0.2rem 0;
+
                 img {
                     width: 25%;
                 }
-            }
-        }
-
-        .navbar {
-            :first-child {
-                margin-left: 4.5rem;
-            }
-
-            .navbar-options {
-                margin-right: 0;
             }
         }
     }
@@ -522,26 +596,65 @@ $shadow-color: #acacac;
 @media (min-width: 1440px) {
     .main-container {
         .container {
-            margin: 0 1.3rem;
-
             .logo {
                 img {
-                    width: 20%;
+                    width: 23%;
                 }
             }
 
             .login-container {
-                width: 10%;
+                width: 13%;
 
                 .login {
-                    font-size: 1rem;
+                    width: 100%;
+                    .login-button {
+                        font-size: 1.1rem;
+                    }
                 }
             }
         }
 
         .navbar {
-            :first-child {
-                margin-left: 6%;
+            font-size: 1.1rem;
+
+            .options-router {
+                .navbar-options {
+                    padding: 1.2rem 0;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 1920px) {
+    .main-container {
+        .container {
+            .logo {
+                img {
+                    width: 26%;
+                }
+            }
+
+            .login-container {
+                .login {
+                    .login-button {
+                        font-size: 1.5rem;
+                    }
+                }
+
+                .user {
+                    font-size: 1.7rem;
+                }
+            }
+        }
+
+        .navbar {
+            font-size: 1.5rem;
+
+            .options-router {
+                .navbar-options {
+                    padding: 1.5rem 0;
+                }
             }
         }
     }

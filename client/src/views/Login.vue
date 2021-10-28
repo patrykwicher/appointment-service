@@ -3,6 +3,7 @@
     <div class="first-column">
       <form @submit.prevent id="form">
         <div class="header">LOG IN TO YOUR ACCOUNT</div>
+        <div class="error-message" v-if="errorMessage"> {{ errorMessage }}</div>
         <div class="email">
           <input type="email" name="" id="" placeholder="E-mail address" v-model="userData.email" />
         </div>
@@ -29,9 +30,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRefs, reactive } from "@vue/runtime-core";
+import { defineComponent, ref, reactive, computed } from "@vue/runtime-core";
 import LoginButton from "../components/LoginButton.vue";
-import createStore from "../store/index"; 
+import createStore from "../store/index";
+import router from "../router/index";
 
 export default defineComponent({
   setup() {
@@ -39,7 +41,11 @@ export default defineComponent({
       email: '',
       password: ''
     })
-    const errorMessage = ref({});
+    const errorMessage = ref<string>('');
+
+    const getUserVisits = () => {
+      createStore.dispatch("fetchSavedUserServices");
+    };
 
     const loginUser = async () => {
       try {
@@ -59,8 +65,10 @@ export default defineComponent({
         } else {
           createStore.commit('setCurrentUser', user);
           createStore.commit('setCheckIfCurrentUserObjectExists', true);
+          router.push('/');
         }
         
+        getUserVisits();
       } catch(err) {
         console.log(err.message);
       }
@@ -69,6 +77,7 @@ export default defineComponent({
     return {
       userData,
       loginUser,
+      errorMessage, 
     }
   },
   components: {
@@ -82,7 +91,7 @@ $container-background: #f6f6f6;
 
 @media (max-width: 320px) {
   .container {
-    height: 90vh;
+    height: 85vh;
     background-color: $container-background;
     text-align: center;
 
@@ -91,8 +100,14 @@ $container-background: #f6f6f6;
         text-align: center;
 
         .header {
-          padding-top: 4rem;
+          padding-top: 2rem;
           font-weight: 700;
+        }
+
+        .error-message {
+          color: red;
+          font-size: 0.7rem;
+          margin-top: 0.6rem;
         }
 
         .email,
@@ -113,7 +128,7 @@ $container-background: #f6f6f6;
 
     .second-column {
       .create-header {
-        padding: 2.2rem 0 1rem;
+        padding: 2.2rem 0 0.2rem;
         font-weight: 700;
       }
 
@@ -125,7 +140,9 @@ $container-background: #f6f6f6;
       }
 
       .register-button {
-        width: 87vw;
+        .login-button {
+          width: 87vw;
+        }
       }
     }
   }
@@ -133,7 +150,7 @@ $container-background: #f6f6f6;
 
 @media (min-width: 321px) {
   .container {
-    height: 90vh;
+    height: 75vh;
     background-color: $container-background;
     text-align: center;
 
@@ -144,6 +161,12 @@ $container-background: #f6f6f6;
         .header {
           padding-top: 4rem;
           font-weight: 700;
+        }
+
+        .error-message {
+          color: red;
+          font-size: 0.8rem;
+          margin-top: 0.6rem;
         }
 
         .email,
@@ -164,7 +187,7 @@ $container-background: #f6f6f6;
 
     .second-column {
       .create-header {
-        padding: 2.2rem 0 1rem;
+        padding: 2.2rem 0 0.3rem;
         font-weight: 700;
       }
 
@@ -177,7 +200,9 @@ $container-background: #f6f6f6;
       }
 
       .register-button {
-        width: 87vw;
+        .login-button {
+          width: 87vw;
+        }
       }
     }
   }
@@ -187,6 +212,10 @@ $container-background: #f6f6f6;
   .container {
     .first-column {
       #form {
+        .error-message {
+          font-size: 0.8rem;
+        }
+
         .email,
         .password {
           width: 70%;
@@ -194,14 +223,16 @@ $container-background: #f6f6f6;
         }
 
         .login-button {
-          width: 30vw;
+          width: 15rem;
         }
       }
     }
 
     .second-column {
-      .login-button {
-        width: 30vw;
+      .register-button {
+        .login-button {
+          width: 15rem;
+        }
       }
     }
   }
@@ -211,6 +242,8 @@ $container-background: #f6f6f6;
   .container {
     display: flex;
     justify-content: space-evenly;
+          box-sizing: border-box;
+
 
     .first-column {
       margin-top: 5rem;
@@ -223,7 +256,7 @@ $container-background: #f6f6f6;
         .email,
         .password {
           margin: auto 0;
-          width: 40vw;
+          width: 20rem;
 
           input {
             padding: 0.7rem 0.8rem;
@@ -231,7 +264,7 @@ $container-background: #f6f6f6;
         }
 
         .login-button {
-            width: 20vw;
+          width: 18rem;
         }
       }
     }
@@ -243,8 +276,10 @@ $container-background: #f6f6f6;
         padding-top: 0;
       }
 
-      .login-button {
-          width: 20vw;
+      .register-button {
+        .login-button {
+          width: 18rem;
+        }
       }
     }
   }
@@ -267,7 +302,7 @@ $container-background: #f6f6f6;
                 }
 
                 .login-button {
-                    width: 15vw;
+                    width: 22rem;
                     font-size: 0.9rem;
                 }
             }
@@ -282,9 +317,11 @@ $container-background: #f6f6f6;
                 font-size: 1rem;
             }
 
-            .login-button {
-                width: 15vw;
+            .register-button {
+              .login-button {
+                width: 22rem;
                 font-size: 0.9rem;
+              }
             }
         }
     }
@@ -300,5 +337,86 @@ $container-background: #f6f6f6;
             }
         }
     }
+}
+
+@media (min-width: 1440px) {
+  .container {
+    .first-column {
+      #form {
+        .header {
+          font-size: 1.3rem;
+        }
+
+        .email,
+        .password {
+          input {
+            font-size: 1.1rem;
+          }
+        }
+        
+        .login-button {
+          font-size: 1.1rem;
+        }
+      }
+    }
+
+    .second-column {
+      .create-header {
+        font-size: 1.3rem;
+      }
+
+      .registration-text {
+        font-size: 1.2rem;
+      }
+
+      .register-button {
+        .login-button {
+          font-size: 1.1rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1920px) {
+  .container {
+    .first-column {
+      #form {
+        .header {
+          font-size: 1.7rem;
+        }
+
+        .email,
+        .password {
+          input {
+            font-size: 1.5rem;
+            width: 21rem;
+          }
+        }
+        
+        .login-button {
+          font-size: 1.5rem;
+          width: 23rem;
+        }
+      }
+    }
+
+    .second-column {
+      .create-header {
+        font-size: 1.7rem;
+      }
+
+      .registration-text {
+        font-size: 1.6rem;
+      }
+      
+      .register-button {
+        .login-button {
+          font-size: 1.5rem;
+          width: 23rem;
+        }
+      }
+    }
+  }
 }
 </style>

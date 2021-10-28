@@ -5,11 +5,17 @@ const servicesRouter = express.Router();
 
 servicesRouter.post('/save-service', async (req, res) => {
     try {
-        const newService = new Service(req.body);
+        const arrayOfNewServices = req.body;
 
-        await newService.save(err => {
-            if (err) console.log(err);
-        });
+        arrayOfNewServices.forEach(async service => {
+            const newService = new Service(service);
+
+            await newService.save(err => {
+                if(err) {
+                    console.log(err);
+                }
+            })
+        })
     } catch(err) {
         console.log(err);
     }
@@ -17,12 +23,14 @@ servicesRouter.post('/save-service', async (req, res) => {
 
 servicesRouter.post('/fetch-user-visits', async (req, res) => {
     try {
-        console.log(req.body);
-
         const userVisits = await Service.find({ userId: req.body._id }, (err, docs) => {
             if(err) {
                 return res.json(400).json(err);
-            } else {
+            } 
+            if(!docs) {
+                console.log('xd');
+            }
+            else {
                 return res.send(docs);
             }
         });
@@ -31,5 +39,19 @@ servicesRouter.post('/fetch-user-visits', async (req, res) => {
     }
 })
 
+setInterval(async () => {
+    try {
+        const today = new Date();
+        const findAllVisits = await Service.find();
+        
+        findAllVisits.find(async visit => {
+            if(visit.dateOfAppointment.getTime() < today.getTime()) {
+                await Service.deleteOne({ _id: visit._id });
+            }
+        })
+    } catch(err) {
+        console.log(err);
+    }
+}, 36000);
 
 module.exports = servicesRouter;

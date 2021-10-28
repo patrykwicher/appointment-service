@@ -1,11 +1,13 @@
 import { createStore } from 'vuex';
+import User from '../types/User';
 
 export default createStore({
   state: {
     chosenServices: [],
-    currentUser: {},
+    currentUser: {} as User,
     checkIfCurrentUserObjectExists: false,
-    fetchedUserVisits: null
+    fetchedUserVisits: null,
+    hideFooterIfNavBurgerIsOpened: true
   },
 
   mutations: {
@@ -20,6 +22,9 @@ export default createStore({
     },
     fetchedUserVisits(state, visits) {
       state.fetchedUserVisits = visits;
+    },
+    hideShowFooterIfNavBurgerIsOpened(state, bool) {
+      state.hideFooterIfNavBurgerIsOpened = bool
     }
   },
 
@@ -45,17 +50,26 @@ export default createStore({
           arrayOfServices.push(objectWithInformationsAboutService);
         });
 
-        arrayOfServices.forEach(async service => {
+        // arrayOfServices.forEach(async service => {
+        //   const userService = await fetch('http://localhost:3000/services/save-service', {
+        //     method: 'POST',
+        //     headers: {
+        //       'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(service)
+        //   });
+        // })
+        const xd = async () => {
           const userService = await fetch('http://localhost:3000/services/save-service', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(service)
+            body: JSON.stringify(arrayOfServices)
           });
+        }
 
-          console.log(userService.json());
-        })
+        xd();
       } catch(err) {
         console.log(err);
       }
