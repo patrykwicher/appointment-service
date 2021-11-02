@@ -18,12 +18,12 @@
                     </select>
                 </div>
                 <div class="date-container">
-                    <div class="days" v-for="(date, datesIndex) in arrayOfDates" :key="datesIndex">
+                    <div class="days" v-for="(date, index) in arrayOfDates" :key="index">
                         {{ arrayOfDays[date.getDay()]}}
                     </div>
                 </div>
                 <div class="date-container">
-                    <div class="dates" v-for="(date, index) in arrayOfDates" :key="index" @click="service.date = date">
+                    <div class="dates" v-for="(date, index) in arrayOfDates" :key="index" @click="service.date = date" :tabindex="index">
                         {{ date.getDate() }}
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export default defineComponent({
             arrayOfDays,
             arrayOfHours,
             currentUser,
-            saveChosenServicesToDatabase
+            saveChosenServicesToDatabase,
         }
     },
     components: {
@@ -161,15 +161,19 @@ $blue-border-color: #5aabe4;
                     }
 
                     .dates {
+                        display: flex;
                         border: 1px solid $blue-border-color;
                         border-radius: 5px;
                         width: 1.7rem;
+                        height: 1.7rem;
+                        align-items: center;
                         font-weight: 700;
+                        justify-content: center;
                         margin-bottom: 0.6rem;
                         color: $blue-border-color;
                         cursor: pointer;
 
-                        &:hover, &:active, &:focus {
+                        &:hover, &:focus {
                             background-color: $blue-border-color;
                             color: white;
                         }
@@ -264,7 +268,7 @@ $blue-border-color: #5aabe4;
                         color: $blue-border-color;
                         cursor: pointer;
 
-                        &:hover, &:active, &:focus {
+                        &:hover, &:focus {
                             background-color: $blue-border-color;
                             color: white;
                         }
@@ -420,13 +424,19 @@ $blue-border-color: #5aabe4;
         .card {
             margin: 5% auto;
         }
+
+        .button {
+            .login-button {
+                font-size: 1.1rem;
+            }
+        }
     }
 }
 
 @media (min-width: 1440px) {
     .container {
         .card {
-            margin: 5% auto;
+            margin: 5% auto 4%;
             width: 30rem;
 
             .first-row {
@@ -438,7 +448,7 @@ $blue-border-color: #5aabe4;
                 
                 .employee-choice {
                     select {
-                        font-size: 1rem;
+                        font-size: 1.2rem;
                         height: 40px;
                     }
                 }
@@ -464,6 +474,48 @@ $blue-border-color: #5aabe4;
             .login-button {
                 width: 30rem;
                 font-size: 1.2rem;
+            }
+        }
+    }
+}
+
+@media (min-width: 1920px) {
+    .container {
+        .card {
+            width: 40rem;
+            margin: 5% auto 3%;
+
+            .first-row {
+                font-size: 1.65rem;
+            }
+
+            .second-row {
+                .employee-choice {
+                    select {
+                        font-size: 1.65rem;
+                        height: 55px;
+                    }
+                }
+
+                .date-container {
+                    .days { 
+                        font-size: 1.55rem;
+                    }
+
+                    .dates {
+                        font-size: 1.55rem;
+                        width: 3.8rem;
+                        height: 3.8rem;
+                    }
+                }
+            }
+        }
+
+        .button {
+            .login-button {
+                width: 40rem;
+                font-size: 1.65rem;
+                padding: 1rem 0;
             }
         }
     }

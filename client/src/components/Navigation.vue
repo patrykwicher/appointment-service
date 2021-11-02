@@ -19,7 +19,9 @@
                     <router-link class="user-router" :to="{ name:'UserVisits', params: { id: getCurrentUserFromStore._id }}">
                         {{ userFirstName }}
                     </router-link>
-                    <div class="logout-container" @click="logout">Logout</div>
+                    <router-link to="/login" class="logout-router">
+                        <div class="logout-container" @click="logout">Logout</div>
+                    </router-link>
                 </div>
             </div>
             <div id="shadow"></div>
@@ -561,9 +563,19 @@ $shadow-color: #acacac;
                             color: $login-color;
                         }
                     }
-
-                    .logout-container {
-                        cursor: pointer;
+                    
+                    .logout-router {
+                        text-decoration: none;
+                        
+                        .logout-container {
+                            cursor: pointer;
+                            color: black;
+                            transition: ease-in 0.15s;
+                            
+                            &:hover {
+                                color: $login-color;
+                            }
+                        }
                     }
                 }
             }
@@ -608,14 +620,14 @@ $shadow-color: #acacac;
                 .login {
                     width: 100%;
                     .login-button {
-                        font-size: 1.1rem;
+                        font-size: 1rem;
                     }
                 }
             }
         }
 
         .navbar {
-            font-size: 1.1rem;
+            font-size: 1rem;
 
             .options-router {
                 .navbar-options {

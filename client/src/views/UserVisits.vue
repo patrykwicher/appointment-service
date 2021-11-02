@@ -211,7 +211,15 @@ $headers-color: #4e4e4e;
     min-height: 58vh;
 
     .no-user {
+      margin-top: 4rem;
+      
+      h2 {
+        font-size: 1.8rem;
+      }
 
+      p {
+        font-size: 1.2rem;
+      }
     }
 
     .user {
@@ -245,28 +253,55 @@ $headers-color: #4e4e4e;
 @media (min-width: 1280px) {
   .container {
     padding: 0 5rem;
-    .no-user {
-
-    }
 
     .user {
       display: grid;
       grid-template-columns: 1fr 1fr;
-
+      
       .user-name {
         grid-column-start: 1;
         grid-column-end: 3;
       }
 
       .visit-card {
-        width: 30rem;
+        width: 25rem;
         margin: 2rem auto;
         box-shadow: 0px 3px 9px 1px rgba(0, 0, 0, 0.3);
 
 
         .date-hour-container, .chosen-service-container {
-          font-size: 1.1rem;
+          font-size: 1rem;
           padding: 1.8rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1920px) {
+  .container {
+    .no-user {
+      h2 {
+        font-size: 3.6rem;
+      }
+
+      p {
+        font-size: 2rem;
+      }
+    }
+
+    .user {
+      grid-template-columns: 1fr 1fr 1fr;
+      
+      .user-name {
+        grid-column-end: 4;
+      }
+
+      .visit-card {
+        width: 30rem;
+        
+        .date-hour-container, .chosen-service-container {
+          font-size: 1.3rem;
         }
       }
     }

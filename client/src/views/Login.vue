@@ -344,34 +344,34 @@ $container-background: #f6f6f6;
     .first-column {
       #form {
         .header {
-          font-size: 1.3rem;
+          font-size: 1.2rem;
         }
 
         .email,
         .password {
           input {
-            font-size: 1.1rem;
+            font-size: 1rem;
           }
         }
         
         .login-button {
-          font-size: 1.1rem;
+          font-size: 1rem;
         }
       }
     }
 
     .second-column {
       .create-header {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
       }
 
       .registration-text {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
       }
 
       .register-button {
         .login-button {
-          font-size: 1.1rem;
+          font-size: 1rem;
         }
       }
     }

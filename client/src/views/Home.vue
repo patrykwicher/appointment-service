@@ -491,6 +491,18 @@ $select-bg-color: #e6e6e6;
           width: 23%;
         }
       }
+
+      .services-container {
+        .service {
+          .service-name {
+            font-size: 0.9rem;
+          }
+
+          .service-price {
+           font-size: 1rem;
+          }
+        }
+      }
     }
   }
 }

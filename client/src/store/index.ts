@@ -50,15 +50,6 @@ export default createStore({
           arrayOfServices.push(objectWithInformationsAboutService);
         });
 
-        // arrayOfServices.forEach(async service => {
-        //   const userService = await fetch('http://localhost:3000/services/save-service', {
-        //     method: 'POST',
-        //     headers: {
-        //       'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(service)
-        //   });
-        // })
         const xd = async () => {
           const userService = await fetch('http://localhost:3000/services/save-service', {
             method: 'POST',
