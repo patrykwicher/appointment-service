@@ -114,7 +114,6 @@ export default defineComponent ({
             try {
                 const logout = await fetch('http://localhost:3000/clients/logout');
                 const log = await logout.json();
-                console.log(logout, log);
             } catch(e) {
                 console.log(e);
             }

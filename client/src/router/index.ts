@@ -38,10 +38,6 @@ const routes: Array<RouteRecordRaw> = [
       requiresAuth: true
     }
   },
-  // {
-  //   path: '',
-  //   redirect: '/not-found'
-  // },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',

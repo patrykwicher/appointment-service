@@ -22,8 +22,8 @@
                         {{ arrayOfDays[date.getDay()]}}
                     </div>
                 </div>
-                <div class="date-container">
-                    <div class="dates" v-for="(date, index) in arrayOfDates" :key="index" @click="service.date = date" :tabindex="index">
+                <div class="date-container dates-parent">
+                    <div class="dates" v-for="(date, index) in arrayOfDates" :key="index" @click="service.date = date; changeDatesColor($event)" :index="index">
                         {{ date.getDate() }}
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <div class="button">
+        <div class="button" v-if="getDeclaredServiceFromStore[getDeclaredServiceFromStore.length-1].hourOfAppointment">
             <router-link :to="{ name: 'UserVisits', params: { id: currentUser._id }}">
                     <LoginButton text="SAVE" @click="saveChosenServicesToDatabase" />
             </router-link>
@@ -73,6 +73,20 @@ export default defineComponent({
             getUserVisits();
         }
 
+        const changeDatesColor = (event: { target: HTMLElement }) => {
+            const arrayOfSiblings = Array.from(event.target.parentNode!.children) as HTMLElement[];
+
+            arrayOfSiblings.forEach(sibling => {
+                if(sibling.attributes[1].value != event.target.attributes[1].value) {
+                    sibling.style.backgroundColor = 'white';
+                    sibling.style.color = '#5aabe4';
+                } else {
+                    event.target.style.backgroundColor = "#5aabe4";
+                    event.target.style.color = "white";
+                }
+            })
+        }
+
         onBeforeMount(() => {
             let todaysDate = new Date();
 
@@ -92,6 +106,7 @@ export default defineComponent({
             arrayOfHours,
             currentUser,
             saveChosenServicesToDatabase,
+            changeDatesColor,
         }
     },
     components: {
@@ -437,18 +452,16 @@ $blue-border-color: #5aabe4;
     .container {
         .card {
             margin: 5% auto 4%;
-            width: 30rem;
+            width: 25rem;
 
             .first-row {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
 
             .second-row {
-                font-size: 1.2rem;
-                
                 .employee-choice {
                     select {
-                        font-size: 1.2rem;
+                        font-size: 1rem;
                         height: 40px;
                     }
                 }
@@ -458,13 +471,13 @@ $blue-border-color: #5aabe4;
                     .days {
                         width: 100%;
                         text-align: center;
-                        font-size: 1.1rem;
+                        font-size: 1rem;
                     }
 
                     .dates {
-                        width: 2.7rem;
-                        height: 2.7rem;
-                        font-size: 1.1rem;
+                        width: 2.3rem;
+                        height: 2.3rem;
+                        font-size: 1rem;
                     }
                 }
             }
@@ -472,7 +485,7 @@ $blue-border-color: #5aabe4;
         
         .button {
             .login-button {
-                width: 30rem;
+                width: 25rem;
                 font-size: 1.2rem;
             }
         }

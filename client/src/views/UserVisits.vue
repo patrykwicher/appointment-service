@@ -39,10 +39,6 @@ import createStore from "../store/index";
 
 export default defineComponent({
   setup() {
-    // const getUserVisits = () => {
-    //   createStore.dispatch("fetchSavedUserServices");
-    // };
-
     const userVisits = computed(() => {
       return createStore.state.fetchedUserVisits;
     });
