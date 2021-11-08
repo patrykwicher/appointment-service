@@ -24,8 +24,8 @@
                     </router-link>
                 </div>
             </div>
-            <div id="shadow"></div>
-            <div id="opened-burger-menu">
+            <div id="shadow" :class="{ active: burger }"></div>
+            <div id="opened-burger-menu" :class="{ active: burger }">
                 <div class="icon-container">
                     <img src="../assets/images/close-icon.png" alt="close" id="close" @click="closeIcon">
                 </div>
@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref, computed, watchEffect } from 'vue';
 import LoginButton from './LoginButton.vue';
 import createStore from '../store/index';
 import User from '../types/User';
@@ -76,21 +76,10 @@ export default defineComponent ({
     },
     setup() {
         const windowWidth = window.innerWidth;
+        const burger = ref<boolean>(true);
 
         const openCloseBurgerMenu = () => {
-            const burgerMenu = document.getElementById('opened-burger-menu')!;
-            const shadow = document.getElementById('shadow')!;
-
-            if(burgerMenu.style.display === 'none') {
-                burgerMenu.style.display = 'block';
-                shadow.style.display = 'block';
-                hideShowFooter(false);
-            }
-            else {
-                burgerMenu.style.display = 'none';
-                shadow.style.display = 'none';
-                hideShowFooter(true);
-            }
+            burger.value = !burger.value;
         }
 
         const hideShowFooter = (bool: boolean) => {
@@ -98,12 +87,7 @@ export default defineComponent ({
         }
 
         const closeIcon = () => {
-            const closeIcon = document.getElementById('close')!;
-            const burgerMenu = document.getElementById('opened-burger-menu')!;
-            const shadow = document.getElementById('shadow')!;
-
-            burgerMenu.style.display = 'none';
-            shadow.style.display = 'none';
+            burger.value = !burger.value;
             hideShowFooter(true);
         }
 
@@ -140,7 +124,8 @@ export default defineComponent ({
             getCurrentUserFromStore,
             checkIfCurrentUserObjectExists,
             logout,
-            userFirstName
+            userFirstName,
+            burger
         }
     }
 })
@@ -179,8 +164,11 @@ $shadow-color: #acacac;
                 }   
             }
 
-            #shadow {
+            .active {
                 display: none;
+            }
+
+            #shadow {
                 z-index: 2;
                 position: absolute;
                 width: 100%;
@@ -192,7 +180,6 @@ $shadow-color: #acacac;
             }
 
             #opened-burger-menu {
-                display: none;
                 z-index: 3;
                 position: absolute;
                 width: 90%;
@@ -305,8 +292,11 @@ $shadow-color: #acacac;
                 }   
             }
 
-            #shadow {
+           .active {
                 display: none;
+            }
+
+            #shadow {
                 z-index: 2;
                 position: absolute;
                 width: 100%;
@@ -318,7 +308,6 @@ $shadow-color: #acacac;
             }
 
             #opened-burger-menu {
-                display: none;
                 z-index: 3;
                 position: absolute;
                 width: 85%;
