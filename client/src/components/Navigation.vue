@@ -80,6 +80,7 @@ export default defineComponent ({
 
         const openCloseBurgerMenu = () => {
             burger.value = !burger.value;
+            hideShowFooter(burger.value);
         }
 
         const hideShowFooter = (bool: boolean) => {
@@ -533,6 +534,10 @@ $shadow-color: #acacac;
 
                 .login {
                     width: 100%;
+                    text-align: center;
+                    .login-button {
+                        width: 100%;
+                    }
                 }
 
                 .user {

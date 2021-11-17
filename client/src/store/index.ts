@@ -29,7 +29,7 @@ export default createStore({
   },
 
   actions: {
-    saveChosenServicesToDatabase(context) {
+    async saveChosenServicesToDatabase(context) {
       try {
         const arrayOfServices = <any[]>[];
         const currentUser = JSON.parse(JSON.stringify(context.state.currentUser));
@@ -49,18 +49,16 @@ export default createStore({
 
           arrayOfServices.push(objectWithInformationsAboutService);
         });
+        console.log(arrayOfServices);
 
-        const xd = async () => {
-          const userService = await fetch('http://localhost:3000/services/save-service', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(arrayOfServices)
-          });
-        }
-
-        xd();
+        const xd = await fetch('http://localhost:3000/services/save-service', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(arrayOfServices)
+        });
       } catch(err) {
         console.log(err);
       }

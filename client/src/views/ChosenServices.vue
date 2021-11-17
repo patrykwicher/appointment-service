@@ -2,8 +2,9 @@
   <div class="container">
     <div
       class="card"
-      v-for="(service, index) in getDeclaredServiceFromStore"
-      :key="index"
+      v-for="(service, cardIndex) in getDeclaredServiceFromStore"
+      :key="cardIndex"
+      :ref="el => { if(el) arrayOfCardsRefs[cardIndex] = el }"
     >
       <div class="first-row">
         <div class="service-name">
@@ -31,7 +32,7 @@
             :key="index"
             @click="
               service.date = date;
-              changeDatesColor(index);
+              changeDatesColor(index, cardIndex)
             "
             :index="index"
             :ref="el => { if(el) arrayOfDatesRefs[index] = el }"
@@ -69,7 +70,7 @@
       <router-link
         :to="{ name: 'UserVisits', params: { id: currentUser._id } }"
       >
-        <LoginButton text="SAVE" @click="saveChosenServicesToDatabase" />
+        <LoginButton text="SAVE" @click="saveChosenServicesToDB" />
       </router-link>
     </div>
   </div>
@@ -105,11 +106,12 @@ export default defineComponent({
     ]);
 
     const arrayOfDatesRefs = ref<number[]>([]);
+    const arrayOfCardsRefs = ref<any[]>([]);
 
     const getDeclaredServiceFromStore = computed(() => {
       return createStore.state.chosenServices;
     });
-
+    
     const currentUser = computed(() => {
       return createStore.state.currentUser;
     });
@@ -118,23 +120,25 @@ export default defineComponent({
       createStore.dispatch("fetchSavedUserServices");
     };
 
-    const saveChosenServicesToDatabase = () => {
+    const saveChosenServicesToDB = () => {
       createStore.dispatch("saveChosenServicesToDatabase");
-      getUserVisits();
+      // getUserVisits();
     };
 
-    const changeDatesColor = (index: number) => {
+    const changeDatesColor = (dateIndex: number, cardIndex: number) => {
         const arrayOfRefs = Object.assign([], arrayOfDatesRefs.value) as HTMLElement[];
+        const arrayOfCards = Object.assign([], arrayOfCardsRefs.value) as HTMLElement[];
+        const date = arrayOfCards[cardIndex].children[1].children[2].children[dateIndex] as HTMLElement;      
+        const card = arrayOfCards[cardIndex] as HTMLElement;
 
-        arrayOfRefs.forEach(el => {
-            if(el.attributes[1].value == index.toString()) {
-                el.style.backgroundColor = '#5aabe4';
-                el.style.color = 'white';
-            } else {
-                el.style.backgroundColor = 'white';
-                el.style.color = '#5aabe4';
-            }
-        })
+        for(let i = 0; i < arrayOfRefs.length; i++) {
+          const cardChild = card.children[1].children[2].children[i] as HTMLElement;
+          cardChild.style.backgroundColor = 'white';
+          cardChild.style.color = '#5aabe4';
+        }
+
+        date.style.backgroundColor = '#5aabe4';
+        date.style.color = 'white';
     };
 
     onBeforeMount(() => {
@@ -157,9 +161,10 @@ export default defineComponent({
       arrayOfDays,
       arrayOfHours,
       currentUser,
-      saveChosenServicesToDatabase,
+      saveChosenServicesToDB,
       changeDatesColor,
-      arrayOfDatesRefs
+      arrayOfDatesRefs,
+      arrayOfCardsRefs,
     };
   },
   components: {

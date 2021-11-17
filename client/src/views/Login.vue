@@ -5,10 +5,10 @@
         <div class="header">LOG IN TO YOUR ACCOUNT</div>
         <div class="error-message" v-if="errorMessage"> {{ errorMessage }}</div>
         <div class="email">
-          <input type="email" name="" id="" placeholder="E-mail address" v-model="userData.email" />
+          <input type="email" placeholder="E-mail address" v-model="userData.email" />
         </div>
         <div class="password">
-          <input type="password" name="" id="" placeholder="Password" v-model="userData.password" />
+          <input type="password" placeholder="Password" v-model="userData.password" />
         </div>
         <div class="login-button">
           <LoginButton text="LOGIN" @click="loginUser" />

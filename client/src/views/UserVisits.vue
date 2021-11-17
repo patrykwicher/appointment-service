@@ -48,7 +48,7 @@ export default defineComponent({
     })
 
     onBeforeMount(() => {
-      // getUserVisits();
+      createStore.dispatch('fetchSavedUserServices');
     });
 
     return {

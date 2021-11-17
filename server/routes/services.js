@@ -6,6 +6,7 @@ const servicesRouter = express.Router();
 servicesRouter.post('/save-service', async (req, res) => {
     try {
         const arrayOfNewServices = req.body;
+        console.log(arrayOfNewServices);
 
         arrayOfNewServices.forEach(async service => {
             const newService = new Service(service);
@@ -13,6 +14,8 @@ servicesRouter.post('/save-service', async (req, res) => {
             await newService.save(err => {
                 if(err) {
                     console.log(err);
+                } else {
+                    return;
                 }
             })
         })
@@ -28,7 +31,7 @@ servicesRouter.post('/fetch-user-visits', async (req, res) => {
                 return res.json(400).json(err);
             } 
             if(!docs) {
-                console.log('xd');
+                return;
             }
             else {
                 return res.send(docs);

@@ -30,7 +30,6 @@ $login-color: #5aabe4;
             font-size: 1rem;
             font-family: 'Open Sans', sans-serif;
             box-sizing: border-box;
-            width: 92%;
 
             &:hover {
                 background-color: $login-color;
@@ -54,7 +53,6 @@ $login-color: #5aabe4;
         font-size: 0.9rem;
         font-family: 'Open Sans', sans-serif;
         box-sizing: border-box;
-        width: 92%;
 
         &:hover {
             background-color: $login-color;
