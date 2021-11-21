@@ -19,7 +19,7 @@
     </div>
     <div class="fourth-column columns">
       <div class="first-part">
-        <p>Fabryka Pięńka</p>
+        <p>Ferryke Dichka</p>
         <p>ul. Klejnot Nilu 6</p>
         <p>12-345 Zimmermann</p>
       </div>

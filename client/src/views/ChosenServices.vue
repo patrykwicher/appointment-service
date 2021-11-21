@@ -116,13 +116,8 @@ export default defineComponent({
       return createStore.state.currentUser;
     });
 
-    const getUserVisits = () => {
-      createStore.dispatch("fetchSavedUserServices");
-    };
-
     const saveChosenServicesToDB = () => {
       createStore.dispatch("saveChosenServicesToDatabase");
-      // getUserVisits();
     };
 
     const changeDatesColor = (dateIndex: number, cardIndex: number) => {
