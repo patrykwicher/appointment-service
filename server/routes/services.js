@@ -6,7 +6,6 @@ const servicesRouter = express.Router();
 servicesRouter.post('/save-service', async (req, res) => {
     try {
         const arrayOfNewServices = req.body;
-        console.log(arrayOfNewServices);
 
         arrayOfNewServices.forEach(async service => {
             const newService = new Service(service);
