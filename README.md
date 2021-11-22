@@ -13,6 +13,7 @@ Main idea of this project was to create an app that allows you to make online ap
 - TypeScript
 - ES6
 - Sass preprocessor
+- RWD
 
 ## Backend
 - Node.js
