@@ -181,12 +181,7 @@ $headers-color: #4e4e4e;
   .container{ 
     min-height: 37vh;
 
-    .no-user {
-
-    }
-
     .user {
-      
       .visit-card {
         margin: 2rem 2rem;
         
