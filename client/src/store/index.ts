@@ -1,29 +1,30 @@
 import { createStore } from 'vuex';
 import User from '../types/User';
+import Service from '../types/Service';
 
 export default createStore({
   state: {
-    chosenServices: [],
-    currentUser: {} as User,
-    checkIfCurrentUserObjectExists: false,
+    chosenServices: <Service[]>[],
+    currentUser: <User>{},
+    checkIfCurrentUserObjectExists: <boolean>false,
     fetchedUserVisits: null,
-    hideFooterIfNavBurgerIsOpened: true
+    hideFooterIfNavBurgerIsOpened: <boolean>true
   },
 
   mutations: {
     declareChosenServices(state, chosenServices) {
       state.chosenServices = chosenServices;
     },
-    setCurrentUser(state, user) {
+    setCurrentUser(state, user: User) {
       state.currentUser = user;
     },
-    setCheckIfCurrentUserObjectExists(state, bool) {
+    setCheckIfCurrentUserObjectExists(state, bool: boolean) {
       state.checkIfCurrentUserObjectExists = bool;
     },
     fetchedUserVisits(state, visits) {
       state.fetchedUserVisits = visits;
     },
-    hideShowFooterIfNavBurgerIsOpened(state, bool) {
+    hideShowFooterIfNavBurgerIsOpened(state, bool: boolean) {
       state.hideFooterIfNavBurgerIsOpened = bool
     }
   },
@@ -34,24 +35,24 @@ export default createStore({
         const arrayOfServices = <any[]>[];
         const currentUser = JSON.parse(JSON.stringify(context.state.currentUser));
 
-        context.state.chosenServices.forEach((service: any) => {
+        context.state.chosenServices.forEach((service: Service) => {
           const objectWithInformationsAboutService = {
-            userId: currentUser._id,
-            userName: currentUser.fullName,
-            phoneNumber: currentUser.phoneNumber,
-            serviceName: service.name,
-            typeOfService: service.type,
-            price: service.price,
-            dateOfAppointment: service.date,
-            hourOfAppointment: service.hourOfAppointment,
-            employee: service.employee
+            userId: <string>currentUser._id,
+            userName: <string>currentUser.fullName,
+            phoneNumber: <number>currentUser.phoneNumber,
+            serviceName: <string>service.name,
+            typeOfService: <string>service.type,
+            price: <number>service.price,
+            dateOfAppointment: <Date>service.date,
+            hourOfAppointment: <string>service.hourOfAppointment,
+            employee: <string>service.employee
           }
 
           arrayOfServices.push(objectWithInformationsAboutService);
         });
         console.log(arrayOfServices);
 
-        const xd = await fetch('http://localhost:3000/services/save-service', {
+        const saveToDatabase = await fetch('http://localhost:3000/services/save-service', {
           method: 'POST',
           mode: 'cors',
           headers: {
@@ -76,7 +77,8 @@ export default createStore({
           body: JSON.stringify(currentUser)
         });
 
-        const visits = await userVisits.json()
+        const visits = await userVisits.json();
+        console.log(visits);
         
         context.commit('fetchedUserVisits', visits);
       } catch(err) {

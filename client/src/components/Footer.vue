@@ -1,10 +1,5 @@
 <template>
   <div class="container" v-if="hideShowFooter">
-    <!-- <div class="icons">
-            <img src="../assets/images/instagram-bw.png" alt="instagram" />
-            <img src="../assets/images/facebook-bw.png" alt="instagram" />
-            <img src="../assets/images/pinterest-bw.png" alt="instagram" />
-        </div> -->
     <div class="first-column columns">
       <p>Services</p>
       <p>About us</p>
@@ -33,18 +28,18 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "@vue/runtime-core";
-import createStore from '../store/index';
+import createStore from "../store/index";
 
 export default defineComponent({
   setup() {
     const hideShowFooter = computed(() => {
       return createStore.state.hideFooterIfNavBurgerIsOpened;
-    })
+    });
 
     return {
-      hideShowFooter
-    }
-  }
+      hideShowFooter,
+    };
+  },
 });
 </script>
 
@@ -95,19 +90,18 @@ $footer-bg-color: #2b2f33;
 
 @media (min-width: 768px) {
   .container {
-      display: flex;
-      justify-content: space-evenly;
-      font-size: 0.8rem;
-      padding: 3rem 2rem;
-    //   text-align: left;
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 0.8rem;
+    padding: 3rem 2rem;
   }
 }
 
 @media (min-width: 1280px) {
-    .container {
-        padding: 4rem 8rem;
-        font-size: 0.85rem;
-    }
+  .container {
+    padding: 4rem 8rem;
+    font-size: 0.85rem;
+  }
 }
 
 @media (min-width: 1440px) {

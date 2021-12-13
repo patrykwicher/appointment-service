@@ -3,12 +3,20 @@
     <div class="first-column">
       <form @submit.prevent id="form">
         <div class="header">LOG IN TO YOUR ACCOUNT</div>
-        <div class="error-message" v-if="errorMessage"> {{ errorMessage }}</div>
+        <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
         <div class="email">
-          <input type="email" placeholder="E-mail address" v-model="userData.email" />
+          <input
+            type="email"
+            placeholder="E-mail address"
+            v-model="userData.email"
+          />
         </div>
         <div class="password">
-          <input type="password" placeholder="Password" v-model="userData.password" />
+          <input
+            type="password"
+            placeholder="Password"
+            v-model="userData.password"
+          />
         </div>
         <div class="login-button">
           <LoginButton text="LOGIN" @click="loginUser" />
@@ -30,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, computed } from "@vue/runtime-core";
+import { defineComponent, ref, reactive } from "@vue/runtime-core";
 import LoginButton from "../components/LoginButton.vue";
 import createStore from "../store/index";
 import router from "../router/index";
@@ -38,10 +46,10 @@ import router from "../router/index";
 export default defineComponent({
   setup() {
     const userData = reactive({
-      email: '',
-      password: ''
-    })
-    const errorMessage = ref<string>('');
+      email: "",
+      password: "",
+    });
+    const errorMessage = ref<string>("");
 
     const getUserVisits = () => {
       createStore.dispatch("fetchSavedUserServices");
@@ -49,36 +57,39 @@ export default defineComponent({
 
     const loginUser = async () => {
       try {
-        const userInfos = await fetch('http://localhost:3000/clients/login', {
-          method: 'POST',
+        const userInfos = await fetch("http://localhost:3000/clients/login", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ username: userData.email, password: userData.password })
+          body: JSON.stringify({
+            username: userData.email,
+            password: userData.password,
+          }),
         });
 
         const user = await userInfos.json();
 
-        if(user.message) {
+        if (user.message) {
           errorMessage.value = user.message;
-          createStore.commit('setCheckIfCurrentUserObjectExists', false);
+          createStore.commit("setCheckIfCurrentUserObjectExists", false);
         } else {
-          createStore.commit('setCurrentUser', user);
-          createStore.commit('setCheckIfCurrentUserObjectExists', true);
-          router.push('/');
+          createStore.commit("setCurrentUser", user);
+          createStore.commit("setCheckIfCurrentUserObjectExists", true);
+          router.push("/");
         }
-        
+
         getUserVisits();
-      } catch(err) {
+      } catch (err) {
         console.log(err.message);
       }
-    }
-  
+    };
+
     return {
       userData,
       loginUser,
-      errorMessage, 
-    }
+      errorMessage,
+    };
   },
   components: {
     LoginButton,
@@ -242,8 +253,7 @@ $container-background: #f6f6f6;
   .container {
     display: flex;
     justify-content: space-evenly;
-          box-sizing: border-box;
-
+    box-sizing: border-box;
 
     .first-column {
       margin-top: 5rem;
@@ -286,57 +296,57 @@ $container-background: #f6f6f6;
 }
 
 @media (min-width: 1024px) {
-    .container {
-        .first-column {
-            #form {
-                .header {
-                    font-size: 1.1rem;
-                }
-
-                .email,
-                .password {
-                    input {
-                        width: 20rem;
-                        font-size: 0.9rem;
-                    }
-                }
-
-                .login-button {
-                    width: 22rem;
-                    font-size: 0.9rem;
-                }
-            }
+  .container {
+    .first-column {
+      #form {
+        .header {
+          font-size: 1.1rem;
         }
 
-        .second-column {
-            .create-header {
-                font-size: 1.1rem;
-            }
-
-            .registration-text {
-                font-size: 1rem;
-            }
-
-            .register-button {
-              .login-button {
-                width: 22rem;
-                font-size: 0.9rem;
-              }
-            }
+        .email,
+        .password {
+          input {
+            width: 20rem;
+            font-size: 0.9rem;
+          }
         }
+
+        .login-button {
+          width: 22rem;
+          font-size: 0.9rem;
+        }
+      }
     }
+
+    .second-column {
+      .create-header {
+        font-size: 1.1rem;
+      }
+
+      .registration-text {
+        font-size: 1rem;
+      }
+
+      .register-button {
+        .login-button {
+          width: 22rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
 }
 
 @media (min-width: 1280px) {
-    .container {
-        .first-column {
-            #form {
-                .email {
-                    margin-bottom: 0.7em;
-                }
-            }
+  .container {
+    .first-column {
+      #form {
+        .email {
+          margin-bottom: 0.7em;
         }
+      }
     }
+  }
 }
 
 @media (min-width: 1440px) {
@@ -353,7 +363,7 @@ $container-background: #f6f6f6;
             font-size: 1rem;
           }
         }
-        
+
         .login-button {
           font-size: 1rem;
         }
@@ -393,7 +403,7 @@ $container-background: #f6f6f6;
             width: 21rem;
           }
         }
-        
+
         .login-button {
           font-size: 1.5rem;
           width: 23rem;
@@ -409,7 +419,7 @@ $container-background: #f6f6f6;
       .registration-text {
         font-size: 1.6rem;
       }
-      
+
       .register-button {
         .login-button {
           font-size: 1.5rem;

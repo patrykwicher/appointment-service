@@ -45,15 +45,15 @@ export default defineComponent({
 
     const user = computed(() => {
       return createStore.state.currentUser;
-    })
+    });
 
     onBeforeMount(() => {
-      createStore.dispatch('fetchSavedUserServices');
+      createStore.dispatch("fetchSavedUserServices");
     });
 
     return {
       userVisits,
-      user
+      user,
     };
   },
 });
@@ -178,13 +178,13 @@ $headers-color: #4e4e4e;
 }
 
 @media (min-width: 375px) {
-  .container{ 
+  .container {
     min-height: 37vh;
 
     .user {
       .visit-card {
         margin: 2rem 2rem;
-        
+
         .date-hour-container {
           font-size: 0.95rem;
         }
@@ -197,13 +197,13 @@ $headers-color: #4e4e4e;
   }
 }
 
-@media (min-width: 768px) { 
+@media (min-width: 768px) {
   .container {
     min-height: 58vh;
 
     .no-user {
       margin-top: 4rem;
-      
+
       h2 {
         font-size: 1.8rem;
       }
@@ -214,7 +214,7 @@ $headers-color: #4e4e4e;
     }
 
     .user {
-      .user-name{ 
+      .user-name {
         font-size: 1.3rem;
       }
       .visit-card {
@@ -248,7 +248,7 @@ $headers-color: #4e4e4e;
     .user {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      
+
       .user-name {
         grid-column-start: 1;
         grid-column-end: 3;
@@ -259,8 +259,8 @@ $headers-color: #4e4e4e;
         margin: 2rem auto;
         box-shadow: 0px 3px 9px 1px rgba(0, 0, 0, 0.3);
 
-
-        .date-hour-container, .chosen-service-container {
+        .date-hour-container,
+        .chosen-service-container {
           font-size: 1rem;
           padding: 1.8rem;
         }
@@ -283,15 +283,16 @@ $headers-color: #4e4e4e;
 
     .user {
       grid-template-columns: 1fr 1fr 1fr;
-      
+
       .user-name {
         grid-column-end: 4;
       }
 
       .visit-card {
         width: 30rem;
-        
-        .date-hour-container, .chosen-service-container {
+
+        .date-hour-container,
+        .chosen-service-container {
           font-size: 1.3rem;
         }
       }

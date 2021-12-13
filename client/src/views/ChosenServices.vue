@@ -4,7 +4,11 @@
       class="card"
       v-for="(service, cardIndex) in getDeclaredServiceFromStore"
       :key="cardIndex"
-      :ref="el => { if(el) arrayOfCardsRefs[cardIndex] = el }"
+      :ref="
+        (el) => {
+          if (el) arrayOfCardsRefs[cardIndex] = el;
+        }
+      "
     >
       <div class="first-row">
         <div class="service-name">
@@ -32,10 +36,14 @@
             :key="index"
             @click="
               service.date = date;
-              changeDatesColor(index, cardIndex)
+              changeDatesColor(index, cardIndex);
             "
             :index="index"
-            :ref="el => { if(el) arrayOfDatesRefs[index] = el }"
+            :ref="
+              (el) => {
+                if (el) arrayOfDatesRefs[index] = el;
+              }
+            "
           >
             {{ date.getDate() }}
           </div>
@@ -80,7 +88,6 @@
 import { defineComponent, computed, ref, onBeforeMount } from "vue";
 import createStore from "../store/index";
 import LoginButton from "../components/LoginButton.vue";
-import router from "../router/index";
 
 export default defineComponent({
   setup() {
@@ -106,12 +113,12 @@ export default defineComponent({
     ]);
 
     const arrayOfDatesRefs = ref<number[]>([]);
-    const arrayOfCardsRefs = ref<any[]>([]);
+    const arrayOfCardsRefs = ref<HTMLElement[]>([]);
 
     const getDeclaredServiceFromStore = computed(() => {
       return createStore.state.chosenServices;
     });
-    
+
     const currentUser = computed(() => {
       return createStore.state.currentUser;
     });
@@ -121,19 +128,21 @@ export default defineComponent({
     };
 
     const changeDatesColor = (dateIndex: number, cardIndex: number) => {
-        const arrayOfRefs = Object.assign([], arrayOfDatesRefs.value) as HTMLElement[];
-        const arrayOfCards = Object.assign([], arrayOfCardsRefs.value) as HTMLElement[];
-        const date = arrayOfCards[cardIndex].children[1].children[2].children[dateIndex] as HTMLElement;      
-        const card = arrayOfCards[cardIndex] as HTMLElement;
+      const arrayOfRefs = Object.assign([], arrayOfDatesRefs.value) as HTMLElement[];
+      const arrayOfCards = Object.assign([], arrayOfCardsRefs.value) as HTMLElement[];
+      const date = arrayOfCards[cardIndex].children[1].children[2].children[dateIndex] as HTMLElement;
+      const card = arrayOfCards[cardIndex] as HTMLElement;
 
-        for(let i = 0; i < arrayOfRefs.length; i++) {
-          const cardChild = card.children[1].children[2].children[i] as HTMLElement;
-          cardChild.style.backgroundColor = 'white';
-          cardChild.style.color = '#5aabe4';
-        }
+      for (let i = 0; i < arrayOfRefs.length; i++) {
+        const cardChild = card.children[1].children[2].children[
+          i
+        ] as HTMLElement;
+        cardChild.style.backgroundColor = "white";
+        cardChild.style.color = "#5aabe4";
+      }
 
-        date.style.backgroundColor = '#5aabe4';
-        date.style.color = 'white';
+      date.style.backgroundColor = "#5aabe4";
+      date.style.color = "white";
     };
 
     onBeforeMount(() => {

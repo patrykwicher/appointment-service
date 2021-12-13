@@ -23,7 +23,14 @@
         />
       </div>
       <div class="password">
-        <input type="password" name="" id="" placeholder="Password" v-model="userData.password" required />
+        <input
+          type="password"
+          name=""
+          id=""
+          placeholder="Password"
+          v-model="userData.password"
+          required
+        />
       </div>
       <div class="phone-number">
         <input
@@ -37,7 +44,11 @@
         />
       </div>
       <div class="button-container">
-        <LoginButton text="REGISTER" class="register-button" @click="registerUser"/>
+        <LoginButton
+          text="REGISTER"
+          class="register-button"
+          @click="registerUser"
+        />
       </div>
     </form>
   </div>
@@ -46,36 +57,35 @@
 <script lang='ts'>
 import { defineComponent, ref } from "@vue/runtime-core";
 import LoginButton from "../components/LoginButton.vue";
-import User from '../types/User';
-import router from '../router/index';
+import User from "../types/User";
 
 export default defineComponent({
   setup() {
     const userData = ref<User>({
-      fullName: '',
-      email: '',
-      password: '',
-      phoneNumber: 0
-    })
+      fullName: "",
+      email: "",
+      password: "",
+      phoneNumber: 0,
+    });
 
     const registerUser = async () => {
       try {
-        let newUser = await fetch('http://localhost:3000/clients/register', {
-          method: 'POST',
+        let newUser = await fetch("http://localhost:3000/clients/register", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(userData.value)
+          body: JSON.stringify(userData.value),
         });
-      } catch(err) {
+      } catch (err) {
         console.log(err.message);
       }
-    }
+    };
 
     return {
       userData,
       registerUser,
-    }
+    };
   },
   components: {
     LoginButton,
@@ -159,6 +169,7 @@ $container-background: #f6f6f6;
     .phone-number {
       margin: auto auto;
       width: 100%;
+      
       input {
         width: 50%;
       }
@@ -270,7 +281,7 @@ $container-background: #f6f6f6;
     .password,
     .phone-number {
       width: 85%;
-      
+
       input {
         font-size: 1.5rem;
       }

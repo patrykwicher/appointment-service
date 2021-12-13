@@ -30,12 +30,18 @@
         />
       </div>
       <div>
-        <div class="services-container" v-for="(service, index) in searchedNameOfService" :key="index">
+        <div
+          class="services-container"
+          v-for="(service, index) in searchedNameOfService"
+          :key="index"
+        >
           <div class="service" v-if="selectedServices === 'All'">
             <div class="service-name">
               {{ searchedNameOfService[index].name }}
             </div>
-            <div class="service-price">{{ searchedNameOfService[index].price }} zł</div>
+            <div class="service-price">
+              {{ searchedNameOfService[index].price }} zł
+            </div>
             <div class="checkbox">
               <input
                 type="checkbox"
@@ -46,11 +52,16 @@
               />
             </div>
           </div>
-          <div class="service" v-if="selectedServices === searchedNameOfService[index].type">
+          <div
+            class="service"
+            v-if="selectedServices === searchedNameOfService[index].type"
+          >
             <div class="service-name">
               {{ searchedNameOfService[index].name }}
             </div>
-            <div class="service-price">{{ searchedNameOfService[index].price }} zł</div>
+            <div class="service-price">
+              {{ searchedNameOfService[index].price }} zł
+            </div>
             <div class="checkbox">
               <input
                 type="checkbox"
@@ -61,7 +72,7 @@
               />
             </div>
           </div>
-        </div>  
+        </div>
       </div>
       <div
         class="button"
@@ -125,7 +136,9 @@ export default defineComponent({
 
     const searchedNameOfService = computed(() => {
       return arrayOfServices.value.filter((service) => {
-        return service.name.toLowerCase().includes(searchInput.value.toLowerCase());
+        return service.name
+          .toLowerCase()
+          .includes(searchInput.value.toLowerCase());
       });
     });
 
@@ -420,7 +433,7 @@ $select-bg-color: #e6e6e6;
     .first-column {
       .service-select-container {
         font-size: 1.1rem;
-        
+
         .categories {
           font-size: 1.1rem;
         }
@@ -499,7 +512,7 @@ $select-bg-color: #e6e6e6;
           }
 
           .service-price {
-           font-size: 1rem;
+            font-size: 1rem;
           }
         }
       }
@@ -562,7 +575,7 @@ $select-bg-color: #e6e6e6;
     }
 
     .button {
-          font-size: 1.7rem;
+      font-size: 1.7rem;
       text-align: center;
 
       .route-button {
